@@ -1,12 +1,25 @@
 #!/bin/sh
 
-rclone copy azArmadous:stationeers /files 
+echo "Performing first time sync"
+rclone sync azArmadous:stationeers /files --progress
+
+hash=$(ls -R -l /files | md5sum)
+
 
 check() {
+    echo "Polling /files for changes"
     while true
     do
-        sleep 30
-        ls /files/* | entr -d -r -c "rclone sync /files azArmadous:stationeers"
+        sleep 5
+
+        hash2=$(ls -R -l /files | md5sum)
+
+        if [ "$hash" != "$hash2" ]
+        then
+            echo "File change detected, performing sync"
+            rclone sync /files azArmadous:stationeers --progress
+            hash=$hash2
+        fi
     done
 }
 
