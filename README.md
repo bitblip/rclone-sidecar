@@ -1,5 +1,6 @@
 # rclone-sidecar
-Specialized image to solve ephemeral container persistance.
+Specialized image to work around restrictive mount options provided by Azure Container Instances using rclone sync.
 
-* Init dest -> source
-* Sync source -> dest
+* Initial sync cloud to files
+* Monitor files directory for changes
+* sync files to cloud
